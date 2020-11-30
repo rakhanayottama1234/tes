@@ -1,6 +1,26 @@
 MYIP=$(wget -qO- ipv4.icanhazip.com);
 MYIP2="s/xxxxxxxxx/$MYIP/g";
 
+# Root Directory
+cd
+
+# Disable IPV6
+echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
+sed -i '$ i\echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6' /etc/rc.local
+
+# Install wget and curl
+apt-get update;apt-get -y install wget curl;
+
+# Local Time Manila
+ln -fs /usr/share/zoneinfo/Asia/Manila /etc/localtime
+
+# Local Configuration
+sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
+service ssh restart
+
+# Update
+apt-get update
+
 # Install Dropbear
 apt-get -y install dropbear
 sed -i 's/NO_START=1/NO_START=0/g' /etc/default/dropbear
